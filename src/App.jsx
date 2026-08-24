@@ -9,6 +9,7 @@ const App = () => {
         <main className='flex-1 p-8'>
             <Navbar />
             <MediaTab />
+            
         </main>
         </div>
   )

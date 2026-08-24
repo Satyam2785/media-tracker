@@ -1,10 +1,25 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, useEffect} from 'react'
+import axios from "axios"
+import Card from './Card'
 
 const MediaTab = () => {
-    const tabs=["movies","series","anime","manga","manhwa"];
-    const[activeTab,setActiveTab]=useState("movies")
+    const tabs=["movie","series","anime","manga","manhwa"];
+    const[activeTab,setActiveTab]=useState("movie");
+      const[media,setMedia]=useState([]);
+
+      useEffect(()=>{
+    const getMedia = async()=>{
+      const response =await axios.get(  `http://localhost:3000/api/${activeTab}`);
+      setMedia(response.data);
+
+    }
+    getMedia();
+  },[activeTab]);
+
+
   return (
+    <>
     <div className='w-[45%] h-[8vh] bg-[#0f172a] mx-auto rounded-[25px] border border-[#1e293b] flex items-center justify-around'>
         {tabs.map((tab)=>(
             <button
@@ -16,6 +31,12 @@ const MediaTab = () => {
             </button>
         ))}
     </div>
+    <div className='mt-6'>
+        <Card media={media}/>
+    </div>
+
+    </>
+    
   )  
 }
 
