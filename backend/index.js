@@ -22,9 +22,12 @@ app.get("/", (req, res) => {
   res.send("Backend is running!");
 });
 
-app.get("/api/movie", async(req,res)=>{
+app.get("/api/:type", async(req,res)=>{
  try{
-   const response= await tmdb.get("/movie/popular");
+  const type= req.params.type;
+  let tmdbEP;
+  if(type==="movie"){
+     const response= await tmdb.get("/movie/popular");
   
   const movies= response.data.results.map((movie)=>({
     id:movie.id,
@@ -35,11 +38,25 @@ app.get("/api/movie", async(req,res)=>{
   }))
   console.log(movies);
   res.json(movies);
+  }
+  else{
+     const response= await tmdb.get("/tv/popular");
+  
+  const series= response.data.results.map((tv)=>({
+    id:tv.id,
+    name:tv.name,
+    type: "series",
+    rating: tv.vote_average,
+    img: `https://image.tmdb.org/t/p/w500${tv.poster_path}`
+  }))
+  console.log(series);
+  res.json(series);
+  }
  }
  catch(error){
 console.error(error);
 res.status(500).json({
-  error:"failed to fetch movies"
+  error:"failed to fetch media"
 })
  }
 });
