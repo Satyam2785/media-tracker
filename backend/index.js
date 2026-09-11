@@ -39,7 +39,7 @@ app.get("/api/:type", async(req,res)=>{
   console.log(movies);
   res.json(movies);
   }
-  else{
+  else if(type==="series"){
      const response= await tmdb.get("/tv/popular");
   
   const series= response.data.results.map((tv)=>({
@@ -52,6 +52,32 @@ app.get("/api/:type", async(req,res)=>{
   console.log(series);
   res.json(series);
   }
+  else if(type==="anime"){
+    const response= await axios.get("https://api.jikan.moe/v4/top/anime");
+    const anime = response.data.data.map((ani)=>({
+      id:ani.mal_id,
+      name:ani.title,
+      type:"anime",
+      rating:ani.score,
+      img:ani.images.jpg.image_url
+    }));
+    res.json(anime);
+  }
+  else if (type === "manga") {
+  const response = await axios.get(
+    "https://api.jikan.moe/v4/top/manga"
+  );
+
+  const manga = response.data.data.map((man) => ({
+    id: man.mal_id,
+    name: man.title,
+    type: "manga",
+    rating: man.score,
+    img: man.images.jpg.image_url
+  }));
+
+  res.json(manga);
+}
  }
  catch(error){
 console.error(error);
